@@ -1,11 +1,11 @@
-import { pool } from "../config/db.js";
+import { getConnection } from '../config/db.js';
 
 export async function executarSQL(query, params = []) {
-  const client = await pool.connect();
-  try {
-    const result = await client.query(query, params);
-    return result; // result.rows para SELECT, result.rowCount para INSERT/UPDATE/DELETE
-  } finally {
-    client.release();
-  }
+    const conn = await getConnection();
+    try {
+        const [result] = await conn.execute(query, params);
+        return result;
+    } finally {
+        conn.release();
+    }
 }
